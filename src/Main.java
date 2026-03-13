@@ -1,34 +1,36 @@
+import java.util.Stack;
+
 public class PalindromeApp {
 
     public static void main(String[] args) {
-        String input = "Deified";
+        String input = "Racecar";
 
-        // Execute Use Case 4: Character Array Based Check
-        boolean isPalindrome = checkWithCharArray(input);
+        // Execute Use Case 5: Stack-Based Check
+        boolean isPalindrome = checkWithStack(input);
 
         System.out.println("Input: " + input);
-        System.out.println("Is Palindrome: " + isPalindrome);
+        System.out.println("Result: " + (isPalindrome ? "Palindrome" : "Not a Palindrome"));
     }
 
-    public static boolean checkWithCharArray(String str) {
-        // Normalize the string: lowercase and remove non-alphanumeric
+    public static boolean checkWithStack(String str) {
+        // Normalize: lowercase and remove non-alphanumeric
         String cleanStr = str.toLowerCase().replaceAll("[^a-z0-9]", "");
 
-        // Convert the string to a character array
-        char[] charArray = cleanStr.toCharArray();
+        Stack<Character> stack = new Stack<>();
 
-        int left = 0;
-        int right = charArray.length - 1;
-
-        // Compare characters from both ends moving towards the middle
-        while (left < right) {
-            if (charArray[left] != charArray[right]) {
-                return false; // Mismatch found, not a palindrome
-            }
-            left++;
-            right--;
+        // Step 1: Push all characters onto the stack
+        for (char c : cleanStr.toCharArray()) {
+            stack.push(c);
         }
 
-        return true; // All characters matched
+        // Step 2: Pop characters and compare with the original string
+        for (int i = 0; i < cleanStr.length(); i++) {
+            char poppedChar = stack.pop();
+            if (cleanStr.charAt(i) != poppedChar) {
+                return false; // Mismatch found
+            }
+        }
+
+        return true; // All characters matched in reverse order
     }
 }
