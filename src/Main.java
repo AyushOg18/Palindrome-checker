@@ -1,38 +1,34 @@
 public class PalindromeApp {
 
     public static void main(String[] args) {
-        // Use Case 1: Welcome Message
-        displayWelcome();
+        String input = "Deified";
 
-        // Use Case 2: Hardcoded Palindrome Result
-        String testWord = "Madam";
+        // Execute Use Case 4: Character Array Based Check
+        boolean isPalindrome = checkWithCharArray(input);
 
-        // Use Case 3: Palindrome Check Using String Reverse
-        executeReverseCheck(testWord);
+        System.out.println("Input: " + input);
+        System.out.println("Is Palindrome: " + isPalindrome);
     }
 
-    public static void displayWelcome() {
-        System.out.println("*****************************************");
-        System.out.println("* WELCOME TO THE PALINDROME CHECKER  *");
-        System.out.println("* Checking symmetry since 2024     *");
-        System.out.println("*****************************************");
-    }
+    public static boolean checkWithCharArray(String str) {
+        // Normalize the string: lowercase and remove non-alphanumeric
+        String cleanStr = str.toLowerCase().replaceAll("[^a-z0-9]", "");
 
-    public static void executeReverseCheck(String original) {
-        // Step 1: Normalize (Lowercase & remove non-alphanumeric)
-        String clean = original.toLowerCase().replaceAll("[^a-z0-9]", "");
+        // Convert the string to a character array
+        char[] charArray = cleanStr.toCharArray();
 
-        // Step 2: Reverse the string using StringBuilder
-        String reversed = new StringBuilder(clean).reverse().toString();
+        int left = 0;
+        int right = charArray.length - 1;
 
-        // Step 3: Compare and Print Results
-        System.out.println("\nOriginal Word: " + original);
-        System.out.println("Reversed Word: " + reversed);
-
-        if (clean.equals(reversed)) {
-            System.out.println(">>> SUCCESS: This is a palindrome!");
-        } else {
-            System.out.println(">>> FAILURE: Not a palindrome.");
+        // Compare characters from both ends moving towards the middle
+        while (left < right) {
+            if (charArray[left] != charArray[right]) {
+                return false; // Mismatch found, not a palindrome
+            }
+            left++;
+            right--;
         }
+
+        return true; // All characters matched
     }
 }
