@@ -1,60 +1,31 @@
-class ListNode {
-    char val;
-    ListNode next;
-    ListNode(char val) { this.val = val; }
-}
-
 public class PalindromeApp {
 
     public static void main(String[] args) {
-        // Create a Linked List: R -> A -> D -> A -> R
-        ListNode head = new ListNode('r');
-        head.next = new ListNode('a');
-        head.next.next = new ListNode('d');
-        head.next.next.next = new ListNode('a');
-        head.next.next.next.next = new ListNode('r');
+        String input = "Malayalam";
 
-        // Execute Use Case 8: Linked List Based Check
-        boolean isPalindrome = isLinkedListPalindrome(head);
+        // Normalize for the recursive check
+        String cleanInput = input.toLowerCase().replaceAll("[^a-z0-9]", "");
 
-        System.out.println("Is Linked List Palindrome: " + isPalindrome);
+        // Execute Use Case 9: Recursive Check
+        boolean isPalindrome = isRecursivePalindrome(cleanInput);
+
+        System.out.println("Input: " + input);
+        System.out.println("Is Palindrome: " + isPalindrome);
     }
 
-    public static boolean isLinkedListPalindrome(ListNode head) {
-        if (head == null || head.next == null) return true;
-
-        // Step 1: Find the middle using Fast and Slow pointers
-        ListNode slow = head;
-        ListNode fast = head;
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
+    public static boolean isRecursivePalindrome(String str) {
+        // Base Case 1: If length is 0 or 1, it's a palindrome
+        if (str.length() <= 1) {
+            return true;
         }
 
-        // Step 2: Reverse the second half of the list
-        ListNode secondHalf = reverseList(slow);
-        ListNode firstHalf = head;
-
-        // Step 3: Compare both halves
-        while (secondHalf != null) {
-            if (firstHalf.val != secondHalf.val) {
-                return false;
-            }
-            firstHalf = firstHalf.next;
-            secondHalf = secondHalf.next;
+        // Check if first and last characters match
+        if (str.charAt(0) == str.charAt(str.length() - 1)) {
+            // Recursive Step: Slice the string to remove first and last chars
+            return isRecursivePalindrome(str.substring(1, str.length() - 1));
         }
 
-        return true;
-    }
-
-    private static ListNode reverseList(ListNode head) {
-        ListNode prev = null;
-        while (head != null) {
-            ListNode nextNode = head.next;
-            head.next = prev;
-            prev = head;
-            head = nextNode;
-        }
-        return prev;
+        // If characters don't match, it's not a palindrome
+        return false;
     }
 }
