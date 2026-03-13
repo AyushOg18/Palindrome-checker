@@ -1,40 +1,40 @@
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class PalindromeApp {
 
     public static void main(String[] args) {
-        String input = "Rotator";
+        String input = "A man, a plan, a canal: Panama";
 
-        // Execute Use Case 6: Queue + Stack Based Check
-        boolean isPalindrome = checkWithQueueAndStack(input);
+        // Execute Use Case 7: Deque-Based Optimized Check
+        boolean isPalindrome = checkWithDeque(input);
 
         System.out.println("Input: " + input);
         System.out.println("Palindrome Status: " + isPalindrome);
     }
 
-    public static boolean checkWithQueueAndStack(String str) {
+    public static boolean checkWithDeque(String str) {
         // Normalize: lowercase and remove non-alphanumeric
         String cleanStr = str.toLowerCase().replaceAll("[^a-z0-9]", "");
 
-        Stack<Character> stack = new Stack<>();
-        Queue<Character> queue = new LinkedList<>();
+        // ArrayDeque is more efficient than LinkedList for this purpose
+        Deque<Character> deque = new ArrayDeque<>();
 
-        // Step 1: Fill both structures
+        // Add all characters to the Deque
         for (char c : cleanStr.toCharArray()) {
-            stack.push(c);
-            queue.add(c);
+            deque.addLast(c);
         }
 
-        // Step 2: Compare characters from both ends simultaneously
-        while (!stack.isEmpty()) {
-            // stack.pop() gets the end, queue.remove() gets the start
-            if (!stack.pop().equals(queue.remove())) {
-                return false;
+        // Compare from both ends simultaneously
+        while (deque.size() > 1) {
+            Character first = deque.removeFirst();
+            Character last = deque.removeLast();
+
+            if (!first.equals(last)) {
+                return false; // Symmetry broken
             }
         }
 
-        return true;
+        return true; // Symmetric throughout
     }
 }
