@@ -1,36 +1,40 @@
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 public class PalindromeApp {
 
     public static void main(String[] args) {
-        String input = "Racecar";
+        String input = "Rotator";
 
-        // Execute Use Case 5: Stack-Based Check
-        boolean isPalindrome = checkWithStack(input);
+        // Execute Use Case 6: Queue + Stack Based Check
+        boolean isPalindrome = checkWithQueueAndStack(input);
 
         System.out.println("Input: " + input);
-        System.out.println("Result: " + (isPalindrome ? "Palindrome" : "Not a Palindrome"));
+        System.out.println("Palindrome Status: " + isPalindrome);
     }
 
-    public static boolean checkWithStack(String str) {
+    public static boolean checkWithQueueAndStack(String str) {
         // Normalize: lowercase and remove non-alphanumeric
         String cleanStr = str.toLowerCase().replaceAll("[^a-z0-9]", "");
 
         Stack<Character> stack = new Stack<>();
+        Queue<Character> queue = new LinkedList<>();
 
-        // Step 1: Push all characters onto the stack
+        // Step 1: Fill both structures
         for (char c : cleanStr.toCharArray()) {
             stack.push(c);
+            queue.add(c);
         }
 
-        // Step 2: Pop characters and compare with the original string
-        for (int i = 0; i < cleanStr.length(); i++) {
-            char poppedChar = stack.pop();
-            if (cleanStr.charAt(i) != poppedChar) {
-                return false; // Mismatch found
+        // Step 2: Compare characters from both ends simultaneously
+        while (!stack.isEmpty()) {
+            // stack.pop() gets the end, queue.remove() gets the start
+            if (!stack.pop().equals(queue.remove())) {
+                return false;
             }
         }
 
-        return true; // All characters matched in reverse order
+        return true;
     }
 }
