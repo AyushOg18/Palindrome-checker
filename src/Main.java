@@ -1,24 +1,50 @@
-import java.util.stream.IntStream;
+/**
+ * Service class responsible for palindrome business logic.
+ */
+class PalindromeService {
+
+    /**
+     * Checks if a given string is a palindrome.
+     * @param input The string to check.
+     * @return true if symmetric, false otherwise.
+     */
+    public boolean isValid(String input) {
+        if (input == null) return false;
+
+        String clean = sanitize(input);
+        return checkSymmetry(clean);
+    }
+
+    // Encapsulated helper method for data cleaning
+    private String sanitize(String str) {
+        return str.toLowerCase().replaceAll("[^a-z0-9]", "");
+    }
+
+    // Encapsulated helper method for logic
+    private boolean checkSymmetry(String str) {
+        int left = 0;
+        int right = str.length() - 1;
+        while (left < right) {
+            if (str.charAt(left++) != str.charAt(right--)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
 
 public class PalindromeApp {
-
     public static void main(String[] args) {
-        String input = "No 'x' in Nixon";
+        // Instantiate the service
+        PalindromeService service = new PalindromeService();
 
-        // Execute Use Case 10: Case-Insensitive & Space-Ignored
-        boolean isPalindrome = checkRobustPalindrome(input);
+        // Data to test
+        String sample = "Was it a car or a cat I saw?";
 
-        System.out.println("Input: " + input);
-        System.out.println("Is Palindrome: " + isPalindrome);
+        // Execute the service
+        boolean result = service.isValid(sample);
+
+        System.out.println("Testing: " + sample);
+        System.out.println("Status: " + (result ? "VALID PALINDROME" : "INVALID"));
     }
-
-    public static boolean checkRobustPalindrome(String str) {
-        // Step 1: Normalize and remove all non-alphanumeric characters
-        String cleanStr = str.toLowerCase().replaceAll("[^a-z0-9]", "");
-
-        // Step 2: Use IntStream to compare characters from both ends
-        // We only need to iterate up to half the length
-        return IntStream.range(0, cleanStr.length() / 2)
-                .allMatch(i -> cleanStr.charAt(i) == cleanStr.charAt(cleanStr.length() - i - 1));
-    }
-}//hello
+}
