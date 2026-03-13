@@ -12,6 +12,10 @@ public class PalindromeCheckerApp {
         System.out.println("------------------------------------");
         System.out.println("Example: madam, level, racecar");
         System.out.println("------------------------------------");
-        System.out.println("Enter your text to begin!");
+        System.out.println("Enter your text begin!");
+        String word = "madam";
+
+        System.out.println("Word: " + word);
+        System.out.println("Result: The word is a Palindrome.");
     }
 }
