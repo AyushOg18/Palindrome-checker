@@ -21,4 +21,4 @@ public class PalindromeApp {
         return IntStream.range(0, cleanStr.length() / 2)
                 .allMatch(i -> cleanStr.charAt(i) == cleanStr.charAt(cleanStr.length() - i - 1));
     }
-}
+}//hello
