@@ -1,31 +1,24 @@
+import java.util.stream.IntStream;
+
 public class PalindromeApp {
 
     public static void main(String[] args) {
-        String input = "Malayalam";
+        String input = "No 'x' in Nixon";
 
-        // Normalize for the recursive check
-        String cleanInput = input.toLowerCase().replaceAll("[^a-z0-9]", "");
-
-        // Execute Use Case 9: Recursive Check
-        boolean isPalindrome = isRecursivePalindrome(cleanInput);
+        // Execute Use Case 10: Case-Insensitive & Space-Ignored
+        boolean isPalindrome = checkRobustPalindrome(input);
 
         System.out.println("Input: " + input);
         System.out.println("Is Palindrome: " + isPalindrome);
     }
 
-    public static boolean isRecursivePalindrome(String str) {
-        // Base Case 1: If length is 0 or 1, it's a palindrome
-        if (str.length() <= 1) {
-            return true;
-        }
+    public static boolean checkRobustPalindrome(String str) {
+        // Step 1: Normalize and remove all non-alphanumeric characters
+        String cleanStr = str.toLowerCase().replaceAll("[^a-z0-9]", "");
 
-        // Check if first and last characters match
-        if (str.charAt(0) == str.charAt(str.length() - 1)) {
-            // Recursive Step: Slice the string to remove first and last chars
-            return isRecursivePalindrome(str.substring(1, str.length() - 1));
-        }
-
-        // If characters don't match, it's not a palindrome
-        return false;
+        // Step 2: Use IntStream to compare characters from both ends
+        // We only need to iterate up to half the length
+        return IntStream.range(0, cleanStr.length() / 2)
+                .allMatch(i -> cleanStr.charAt(i) == cleanStr.charAt(cleanStr.length() - i - 1));
     }
 }
