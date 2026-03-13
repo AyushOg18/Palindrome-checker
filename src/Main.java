@@ -1,50 +1,60 @@
-/**
- * Service class responsible for palindrome business logic.
- */
-class PalindromeService {
+// 1. Define the Strategy Interface
+interface PalindromeStrategy {
+    boolean check(String input);
+}
 
-    /**
-     * Checks if a given string is a palindrome.
-     * @param input The string to check.
-     * @return true if symmetric, false otherwise.
-     */
-    public boolean isValid(String input) {
-        if (input == null) return false;
-
-        String clean = sanitize(input);
-        return checkSymmetry(clean);
-    }
-
-    // Encapsulated helper method for data cleaning
-    private String sanitize(String str) {
-        return str.toLowerCase().replaceAll("[^a-z0-9]", "");
-    }
-
-    // Encapsulated helper method for logic
-    private boolean checkSymmetry(String str) {
-        int left = 0;
-        int right = str.length() - 1;
+// 2. Implementation: Two-Pointer Strategy
+class TwoPointerStrategy implements PalindromeStrategy {
+    public boolean check(String input) {
+        String s = input.toLowerCase().replaceAll("[^a-z0-9]", "");
+        int left = 0, right = s.length() - 1;
         while (left < right) {
-            if (str.charAt(left++) != str.charAt(right--)) {
-                return false;
-            }
+            if (s.charAt(left++) != s.charAt(right--)) return false;
         }
         return true;
     }
 }
 
+// 3. Implementation: Recursive Strategy
+class RecursiveStrategy implements PalindromeStrategy {
+    public boolean check(String input) {
+        String s = input.toLowerCase().replaceAll("[^a-z0-9]", "");
+        return isRecursive(s);
+    }
+    private boolean isRecursive(String s) {
+        if (s.length() <= 1) return true;
+        if (s.charAt(0) != s.charAt(s.length() - 1)) return false;
+        return isRecursive(s.substring(1, s.length() - 1));
+    }
+}
+
+// 4. The Context Class (The "App" or Service)
+class PalindromeValidator {
+    private PalindromeStrategy strategy;
+
+    // We can swap strategies at any time
+    public void setStrategy(PalindromeStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public boolean validate(String text) {
+        if (strategy == null) throw new IllegalStateException("Strategy not set!");
+        return strategy.check(text);
+    }
+}
+
+// 5. Execution
 public class PalindromeApp {
     public static void main(String[] args) {
-        // Instantiate the service
-        PalindromeService service = new PalindromeService();
+        PalindromeValidator validator = new PalindromeValidator();
+        String testText = "A man, a plan, a canal: Panama";
 
-        // Data to test
-        String sample = "Was it a car or a cat I saw?";
+        // Use Two-Pointer Algorithm
+        validator.setStrategy(new TwoPointerStrategy());
+        System.out.println("Two-Pointer Result: " + validator.validate(testText));
 
-        // Execute the service
-        boolean result = service.isValid(sample);
-
-        System.out.println("Testing: " + sample);
-        System.out.println("Status: " + (result ? "VALID PALINDROME" : "INVALID"));
+        // Switch to Recursive Algorithm at runtime
+        validator.setStrategy(new RecursiveStrategy());
+        System.out.println("Recursive Result: " + validator.validate(testText));
     }
 }
