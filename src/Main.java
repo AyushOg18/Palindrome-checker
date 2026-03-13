@@ -1,9 +1,20 @@
-// 1. Define the Strategy Interface
+import java.util.ArrayList;
+import java.util.List;
+
+// Reuse the Strategy Interface from UC12
 interface PalindromeStrategy {
     boolean check(String input);
 }
 
-// 2. Implementation: Two-Pointer Strategy
+// Strategy 1: String Reverse (Using StringBuilder)
+class ReverseStrategy implements PalindromeStrategy {
+    public boolean check(String input) {
+        String clean = input.toLowerCase().replaceAll("[^a-z0-9]", "");
+        return clean.equals(new StringBuilder(clean).reverse().toString());
+    }
+}
+
+// Strategy 2: Two-Pointer (Manual Array Traversal)
 class TwoPointerStrategy implements PalindromeStrategy {
     public boolean check(String input) {
         String s = input.toLowerCase().replaceAll("[^a-z0-9]", "");
@@ -15,46 +26,26 @@ class TwoPointerStrategy implements PalindromeStrategy {
     }
 }
 
-// 3. Implementation: Recursive Strategy
-class RecursiveStrategy implements PalindromeStrategy {
-    public boolean check(String input) {
-        String s = input.toLowerCase().replaceAll("[^a-z0-9]", "");
-        return isRecursive(s);
-    }
-    private boolean isRecursive(String s) {
-        if (s.length() <= 1) return true;
-        if (s.charAt(0) != s.charAt(s.length() - 1)) return false;
-        return isRecursive(s.substring(1, s.length() - 1));
-    }
-}
-
-// 4. The Context Class (The "App" or Service)
-class PalindromeValidator {
-    private PalindromeStrategy strategy;
-
-    // We can swap strategies at any time
-    public void setStrategy(PalindromeStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public boolean validate(String text) {
-        if (strategy == null) throw new IllegalStateException("Strategy not set!");
-        return strategy.check(text);
-    }
-}
-
-// 5. Execution
 public class PalindromeApp {
     public static void main(String[] args) {
-        PalindromeValidator validator = new PalindromeValidator();
-        String testText = "A man, a plan, a canal: Panama";
+        String testInput = "A man, a plan, a canal: Panama".repeat(100); // Larger string for better measurement
 
-        // Use Two-Pointer Algorithm
-        validator.setStrategy(new TwoPointerStrategy());
-        System.out.println("Two-Pointer Result: " + validator.validate(testText));
+        System.out.println("--- Palindrome Performance Benchmark ---");
+        System.out.println("Input Length: " + testInput.length() + " characters\n");
 
-        // Switch to Recursive Algorithm at runtime
-        validator.setStrategy(new RecursiveStrategy());
-        System.out.println("Recursive Result: " + validator.validate(testText));
+        runBenchmark("String Reverse", new ReverseStrategy(), testInput);
+        runBenchmark("Two-Pointer   ", new TwoPointerStrategy(), testInput);
+    }
+
+    private static void runBenchmark(String name, PalindromeStrategy strategy, String input) {
+        long startTime = System.nanoTime();
+
+        boolean result = strategy.check(input);
+
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+
+        System.out.printf("Strategy: %s | Result: %b | Time: %d ns%n",
+                name, result, duration);
     }
 }
